@@ -167,9 +167,9 @@ std::string Dependency::getInstallPath()
 {
     return Settings::destFolder() + new_name;
 }
-std::string Dependency::getInnerPath()
+std::string Dependency::getInnerPath(const std::string& new_rpath)
 {
-    return Settings::inside_dep_load_path() + new_name;
+    return new_rpath + new_name;
 }
 
 
@@ -203,7 +203,7 @@ bool Dependency::copyYourself()
     }
 
     // Fix the lib's inner name
-    std::string command = std::string("install_name_tool -id \"") + getInnerPath() + "\" \"" + getInstallPath() + "\"";
+    std::string command = std::string("install_name_tool -id \"") + getInnerPath(Settings::inside_dep_load_path()) + "\" \"" + getInstallPath() + "\"";
     if( systemp( command ) != 0 )
     {
         std::cerr << "\n\nError : An error occured while trying to change identity of library " << getInstallPath() << std::endl;
@@ -213,27 +213,27 @@ bool Dependency::copyYourself()
     return true;
 }
 
-void Dependency::fixFileThatDependsOnMe(const std::string& file_to_fix)
+void Dependency::fixFileThatDependsOnMe(const std::string& file_to_fix, const std::string& new_rpath)
 {
     // for main lib file
-    changeInstallName(file_to_fix, getOriginalPath(), getInnerPath());
+    changeInstallName(file_to_fix, getOriginalPath(), getInnerPath(new_rpath));
     // for symlinks
     const int symamount = symlinks.size();
     for(int n=0; n<symamount; n++)
     {
-        changeInstallName(file_to_fix, symlinks[n], getInnerPath());
+        changeInstallName(file_to_fix, symlinks[n], getInnerPath(new_rpath));
     }
     
     // FIXME - hackish
     if(missing_prefixes)
     {
         // for main lib file
-        changeInstallName(file_to_fix, filename, getInnerPath());
+        changeInstallName(file_to_fix, filename, getInnerPath(new_rpath));
         // for symlinks
         const int symamount = symlinks.size();
         for(int n=0; n<symamount; n++)
         {
-            changeInstallName(file_to_fix, symlinks[n], getInnerPath());
+            changeInstallName(file_to_fix, symlinks[n], getInnerPath(new_rpath));
         }
     }
 }

@@ -44,7 +44,7 @@ std::map<std::string, bool> deps_collected;
 std::map<std::string, std::vector<std::string> > rpaths_per_file;
 std::map<std::string, std::string> rpath_to_fullpath;
 
-void changeLibPathsOnFile(std::string file_to_fix)
+void changeLibPathsOnFile(std::string file_to_fix, const std::string& new_rpath)
 {
     if (deps_collected.find(file_to_fix) == deps_collected.end())
     {
@@ -58,7 +58,7 @@ void changeLibPathsOnFile(std::string file_to_fix)
     const int dep_amount = deps_in_file.size();
     for(int n=0; n<dep_amount; n++)
     {
-        deps_in_file[n].fixFileThatDependsOnMe(file_to_fix);
+        deps_in_file[n].fixFileThatDependsOnMe(file_to_fix, new_rpath);
     }
 }
 
@@ -398,7 +398,7 @@ void doneWithDeps_go()
             if (!should_patch) {
                 continue;
             }
-            changeLibPathsOnFile(deps[n].getInstallPath());
+            changeLibPathsOnFile(deps[n].getInstallPath(), Settings::inside_dep_load_path());
             fixRpathsOnFile(deps[n].getOriginalPath(), deps[n].getInstallPath(), Settings::inside_dep_load_path());
             adhocCodeSign(deps[n].getInstallPath());
         }
@@ -409,7 +409,7 @@ void doneWithDeps_go()
     {
         std::cout << "\n* Processing " << Settings::fileToFix(n) << std::endl;
         copyFile(Settings::fileToFix(n), Settings::fileToFix(n)); // to set write permission
-        changeLibPathsOnFile(Settings::fileToFix(n));
+        changeLibPathsOnFile(Settings::fileToFix(n), Settings::inside_bin_load_path());
         fixRpathsOnFile(Settings::fileToFix(n), Settings::fileToFix(n), Settings::inside_bin_load_path());
         adhocCodeSign(Settings::fileToFix(n));
     }

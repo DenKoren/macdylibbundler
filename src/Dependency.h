@@ -46,7 +46,7 @@ public:
     std::string getOriginalFileName() const{ return filename; }
     std::string getOriginalPath() const{ return prefix+filename; }
     std::string getInstallPath();
-    std::string getInnerPath();
+    std::string getInnerPath(const std::string& new_rpath);
         
     void addSymlink(const std::string& s);
     int getSymlinkAmount() const{ return symlinks.size(); }
@@ -55,7 +55,7 @@ public:
     std::string getPrefix() const{ return prefix; }
 
     bool copyYourself();
-    void fixFileThatDependsOnMe(const std::string& file);
+    void fixFileThatDependsOnMe(const std::string& file, const std::string& new_rpath);
 
     // Compares the given dependency with this one. If both refer to the same file,
     // it returns true and merges both entries into one.
