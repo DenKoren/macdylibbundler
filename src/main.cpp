@@ -58,7 +58,7 @@ void showHelp()
     std::cout << " -b, --bundle-deps" << std::endl;
     std::cout << " -d, --dest-dir <directory to send bundled libraries (relative to cwd)>" << std::endl;
     std::cout << " -p, --install-path <'inner' path of bundled libraries when patching files from --fix-file (usually relative to executable, by default '@executable_path/../libs/')>" << std::endl;
-    std::cout << "-lp, --install-libs-path <'inner' path of bundled libraries to set when patching dependencies ('@loader_path/' can be an option, defaults to '--install-path' value)>" << std::endl;
+    std::cout << "-dp, --install-deps-path <'inner' path of bundled libraries to set when patching dependencies ('@loader_path/' can be an option, defaults to '--install-path' value)>" << std::endl;
     std::cout << " -s, --search-path <directory to add to list of locations searched>" << std::endl;
     std::cout << "-of, --overwrite-files (allow overwriting files in output directory)" << std::endl;
     std::cout << "-ie, --ignore-existing (makes bundler to leave existing files in output directory intact)" << std::endl;
@@ -71,7 +71,6 @@ void showHelp()
 
 int main (int argc, char * const argv[])
 {
-    
     // parse arguments    
     for(int i=0; i<argc; i++)
     {
@@ -92,10 +91,10 @@ int main (int argc, char * const argv[])
             Settings::inside_bin_load_path(argv[i]);
             continue;
         }
-        else if(strcmp(argv[i],"-lp")==0 or strcmp(argv[i],"--install-libs-path")==0)
+        else if(strcmp(argv[i],"-dp")==0 or strcmp(argv[i],"--install-deps-path")==0)
         {
             i++;
-            Settings::inside_lib_load_path(argv[i]);
+            Settings::inside_dep_load_path(argv[i]);
             continue;
         }
         else if(strcmp(argv[i],"-i")==0 or strcmp(argv[i],"--ignore")==0)
@@ -157,9 +156,9 @@ int main (int argc, char * const argv[])
         }
     }
 
-    if (Settings::inside_lib_load_path() == "") {
-        // Default 'libs' load path to be equal to 'bin' load path for backward compatibility with older dylibbundler versions logic
-        Settings::inside_lib_load_path(Settings::inside_bin_load_path());
+    if (Settings::inside_dep_load_path() == "") {
+        // Default 'deps' load path to be equal to 'bin' load path for backward compatibility with older dylibbundler versions logic
+        Settings::inside_dep_load_path(Settings::inside_bin_load_path());
     }
     
     if(not Settings::bundleLibs() and Settings::fileToFixAmount()<1)

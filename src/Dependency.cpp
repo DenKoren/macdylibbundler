@@ -169,7 +169,7 @@ std::string Dependency::getInstallPath()
 }
 std::string Dependency::getInnerPath()
 {
-    return Settings::inside_lib_load_path() + new_name;
+    return Settings::inside_dep_load_path() + new_name;
 }
 
 

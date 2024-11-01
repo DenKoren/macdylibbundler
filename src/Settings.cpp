@@ -75,13 +75,13 @@ void inside_bin_load_path(const std::string& p)
     if( inside_bin_load_path_str[ inside_bin_load_path_str.size()-1 ] != '/' ) inside_bin_load_path_str += "/";
 }
 
-std::string inside_lib_load_path_str = "";
-std::string inside_lib_load_path(){ return inside_lib_load_path_str; }
-void inside_lib_load_path(const std::string& p)
+std::string inside_dep_load_path_str = "";
+std::string inside_dep_load_path(){ return inside_dep_load_path_str; }
+void inside_dep_load_path(const std::string& p)
 {
-    inside_lib_load_path_str = p;
+    inside_dep_load_path_str = p;
     // fix path if needed so it ends with '/'
-    if( inside_lib_load_path_str[ inside_lib_load_path_str.size()-1 ] != '/' ) inside_lib_load_path_str += "/";
+    if( inside_dep_load_path_str[ inside_dep_load_path_str.size()-1 ] != '/' ) inside_dep_load_path_str += "/";
 }
 
 std::vector<std::string> prefixes_to_ignore;

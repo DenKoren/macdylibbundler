@@ -63,8 +63,8 @@ std::string fileToFix(const int n);
 std::string inside_bin_load_path();
 void inside_bin_load_path(const std::string& p);
 
-std::string inside_lib_load_path();
-void inside_lib_load_path(const std::string& p);
+std::string inside_dep_load_path();
+void inside_dep_load_path(const std::string& p);
 
 void addSearchPath(const std::string& path);
 int searchPathAmount();

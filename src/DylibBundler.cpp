@@ -399,7 +399,7 @@ void doneWithDeps_go()
                 continue;
             }
             changeLibPathsOnFile(deps[n].getInstallPath());
-            fixRpathsOnFile(deps[n].getOriginalPath(), deps[n].getInstallPath(), Settings::inside_lib_load_path());
+            fixRpathsOnFile(deps[n].getOriginalPath(), deps[n].getInstallPath(), Settings::inside_dep_load_path());
             adhocCodeSign(deps[n].getInstallPath());
         }
     }
