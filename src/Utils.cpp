@@ -93,13 +93,20 @@ bool fileExists(const std::string& filename)
     }
 }
 
-void copyFile(const string& from, const string& to)
+bool copyFile(const string& from, const string& to)
 {
     bool override = Settings::canOverwriteFiles();
+    bool ignore = Settings::canIgnoreExisting();
     if( from != to && !override )
     {
         if(fileExists( to ))
         {
+            if (ignore)
+            {
+                cerr << "\n/!\\ WARNING : library " << to.c_str() << " already exists in dest dir and will not be patched." << endl;
+                return false;
+            }
+
             cerr << "\n\nError : File " << to.c_str() << " already exists. Remove it or enable overwriting." << endl;
             exit(1);
         }
@@ -122,6 +129,8 @@ void copyFile(const string& from, const string& to)
         cerr << "\n\nError : An error occured while trying to set write permissions on file " << to << endl;
         exit(1);
     }
+
+    return true;
 }
 
 std::string system_get_output(const std::string& cmd)

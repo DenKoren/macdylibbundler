@@ -38,6 +38,9 @@ void ignore_prefix(std::string prefix);
 bool canOverwriteFiles();
 void canOverwriteFiles(bool permission);
 
+bool canIgnoreExisting();
+void canIgnoreExisting(bool permission);
+
 bool canOverwriteDir();
 void canOverwriteDir(bool permission);
 
@@ -57,8 +60,11 @@ void addFileToFix(const std::string& path);
 int fileToFixAmount();
 std::string fileToFix(const int n);
 
-std::string inside_lib_path();
-void inside_lib_path(const std::string& p);
+std::string inside_bin_load_path();
+void inside_bin_load_path(const std::string& p);
+
+std::string inside_lib_load_path();
+void inside_lib_load_path(const std::string& p);
 
 void addSearchPath(const std::string& path);
 int searchPathAmount();

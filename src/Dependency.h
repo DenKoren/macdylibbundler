@@ -54,9 +54,9 @@ public:
     std::string getSymlink(const int i) const{ return symlinks[i]; }
     std::string getPrefix() const{ return prefix; }
 
-    void copyYourself();
+    bool copyYourself();
     void fixFileThatDependsOnMe(const std::string& file);
-    
+
     // Compares the given dependency with this one. If both refer to the same file,
     // it returns true and merges both entries into one.
     bool mergeIfSameAs(Dependency& dep2);

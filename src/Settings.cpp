@@ -29,15 +29,18 @@ namespace Settings
 {
 
 bool overwrite_files = false;
+bool ignore_existing = true;
 bool overwrite_dir = false;
 bool create_dir = false;
 bool codesign = true;
 
+bool canIgnoreExisting(){ return ignore_existing; }
 bool canOverwriteFiles(){ return overwrite_files; }
 bool canOverwriteDir(){ return overwrite_dir; }
 bool canCreateDir(){ return create_dir; }
 bool canCodesign(){ return codesign; }
 
+void canIgnoreExisting(bool permission){ ignore_existing = permission; }
 void canOverwriteFiles(bool permission){ overwrite_files = permission; }
 void canOverwriteDir(bool permission){ overwrite_dir = permission; }
 void canCreateDir(bool permission){ create_dir = permission; }
@@ -63,13 +66,22 @@ void addFileToFix(const std::string& path){ files.push_back(path); }
 int fileToFixAmount(){ return files.size(); }
 std::string fileToFix(const int n){ return files[n]; }
 
-std::string inside_path_str = "@executable_path/../libs/";
-std::string inside_lib_path(){ return inside_path_str; }
-void inside_lib_path(const std::string& p)
+std::string inside_bin_load_path_str = "@executable_path/../libs/";
+std::string inside_bin_load_path(){ return inside_bin_load_path_str; }
+void inside_bin_load_path(const std::string& p)
 {
-    inside_path_str = p;
+    inside_bin_load_path_str = p;
     // fix path if needed so it ends with '/'
-    if( inside_path_str[ inside_path_str.size()-1 ] != '/' ) inside_path_str += "/";
+    if( inside_bin_load_path_str[ inside_bin_load_path_str.size()-1 ] != '/' ) inside_bin_load_path_str += "/";
+}
+
+std::string inside_lib_load_path_str = "";
+std::string inside_lib_load_path(){ return inside_lib_load_path_str; }
+void inside_lib_load_path(const std::string& p)
+{
+    inside_lib_load_path_str = p;
+    // fix path if needed so it ends with '/'
+    if( inside_lib_load_path_str[ inside_lib_load_path_str.size()-1 ] != '/' ) inside_lib_load_path_str += "/";
 }
 
 std::vector<std::string> prefixes_to_ignore;

@@ -169,7 +169,7 @@ std::string Dependency::getInstallPath()
 }
 std::string Dependency::getInnerPath()
 {
-    return Settings::inside_lib_path() + new_name;
+    return Settings::inside_lib_load_path() + new_name;
 }
 
 
@@ -194,10 +194,14 @@ bool Dependency::mergeIfSameAs(Dependency& dep2)
     return false;
 }
 
-void Dependency::copyYourself()
+bool Dependency::copyYourself()
 {
-    copyFile(getOriginalPath(), getInstallPath());
+    const bool should_patch = copyFile(getOriginalPath(), getInstallPath());
     
+    if (!should_patch) {
+        return false;
+    }
+
     // Fix the lib's inner name
     std::string command = std::string("install_name_tool -id \"") + getInnerPath() + "\" \"" + getInstallPath() + "\"";
     if( systemp( command ) != 0 )
@@ -205,6 +209,8 @@ void Dependency::copyYourself()
         std::cerr << "\n\nError : An error occured while trying to change identity of library " << getInstallPath() << std::endl;
         exit(1);
     }
+
+    return true;
 }
 
 void Dependency::fixFileThatDependsOnMe(const std::string& file_to_fix)

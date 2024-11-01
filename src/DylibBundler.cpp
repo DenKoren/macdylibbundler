@@ -193,7 +193,7 @@ std::string searchFilenameInRpaths(const std::string& rpath_dep)
     return searchFilenameInRpaths(rpath_dep, rpath_dep);
 }
 
-void fixRpathsOnFile(const std::string& original_file, const std::string& file_to_fix)
+void fixRpathsOnFile(const std::string& original_file, const std::string& file_to_fix, const std::string new_rpath)
 {
     std::vector<std::string> rpaths_to_fix;
     std::map<std::string, std::vector<std::string> >::iterator found = rpaths_per_file.find(original_file);
@@ -205,7 +205,7 @@ void fixRpathsOnFile(const std::string& original_file, const std::string& file_t
     for (size_t i=0; i < rpaths_to_fix.size(); ++i)
     {
         std::string command = std::string("install_name_tool -rpath \"") +
-                rpaths_to_fix[i] + "\" \"" + Settings::inside_lib_path() + "\" \"" + file_to_fix + "\"";
+                rpaths_to_fix[i] + "\" \"" + new_rpath + "\" \"" + file_to_fix + "\"";
         if ( systemp(command) != 0)
         {
             std::cerr << "\n\nError : An error occured while trying to fix dependencies of " << file_to_fix << std::endl;
@@ -394,9 +394,12 @@ void doneWithDeps_go()
         for(int n=dep_amount-1; n>=0; n--)
         {
             std::cout << "\n* Processing dependency " << deps[n].getInstallPath() << std::endl;
-            deps[n].copyYourself();
+            const bool should_patch = deps[n].copyYourself();
+            if (!should_patch) {
+                continue;
+            }
             changeLibPathsOnFile(deps[n].getInstallPath());
-            fixRpathsOnFile(deps[n].getOriginalPath(), deps[n].getInstallPath());
+            fixRpathsOnFile(deps[n].getOriginalPath(), deps[n].getInstallPath(), Settings::inside_lib_load_path());
             adhocCodeSign(deps[n].getInstallPath());
         }
     }
@@ -407,7 +410,7 @@ void doneWithDeps_go()
         std::cout << "\n* Processing " << Settings::fileToFix(n) << std::endl;
         copyFile(Settings::fileToFix(n), Settings::fileToFix(n)); // to set write permission
         changeLibPathsOnFile(Settings::fileToFix(n));
-        fixRpathsOnFile(Settings::fileToFix(n), Settings::fileToFix(n));
+        fixRpathsOnFile(Settings::fileToFix(n), Settings::fileToFix(n), Settings::inside_bin_load_path());
         adhocCodeSign(Settings::fileToFix(n));
     }
 }

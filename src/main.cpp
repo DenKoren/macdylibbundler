@@ -54,17 +54,19 @@ void showHelp()
     std::cout << "dylibbundler " << VERSION << std::endl;
     std::cout << "dylibbundler is a utility that helps bundle dynamic libraries inside macOS app bundles.\n" << std::endl;
     
-    std::cout << "-x, --fix-file <file to fix (executable or app plug-in)>" << std::endl;
-    std::cout << "-b, --bundle-deps" << std::endl;
-    std::cout << "-d, --dest-dir <directory to send bundled libraries (relative to cwd)>" << std::endl;
-    std::cout << "-p, --install-path <'inner' path of bundled libraries (usually relative to executable, by default '@executable_path/../libs/')>" << std::endl;
-    std::cout << "-s, --search-path <directory to add to list of locations searched>" << std::endl;
+    std::cout << " -x, --fix-file <file to fix (executable or app plug-in)>" << std::endl;
+    std::cout << " -b, --bundle-deps" << std::endl;
+    std::cout << " -d, --dest-dir <directory to send bundled libraries (relative to cwd)>" << std::endl;
+    std::cout << " -p, --install-path <'inner' path of bundled libraries when patching files from --fix-file (usually relative to executable, by default '@executable_path/../libs/')>" << std::endl;
+    std::cout << "-lp, --install-libs-path <'inner' path of bundled libraries to set when patching dependencies ('@loader_path/' can be an option, defaults to '--install-path' value)>" << std::endl;
+    std::cout << " -s, --search-path <directory to add to list of locations searched>" << std::endl;
     std::cout << "-of, --overwrite-files (allow overwriting files in output directory)" << std::endl;
+    std::cout << "-ie, --ignore-existing (makes bundler to leave existing files in output directory intact)" << std::endl;
     std::cout << "-od, --overwrite-dir (totally overwrite output directory if it already exists. implies --create-dir)" << std::endl;
     std::cout << "-cd, --create-dir (creates output directory if necessary)" << std::endl;
     std::cout << "-ns, --no-codesign (disables ad-hoc codesigning)" << std::endl;
-    std::cout << "-i, --ignore <location to ignore> (will ignore libraries in this directory)" << std::endl;
-    std::cout << "-h, --help" << std::endl;
+    std::cout << " -i, --ignore <location to ignore> (will ignore libraries in this directory)" << std::endl;
+    std::cout << " -h, --help" << std::endl;
 }
 
 int main (int argc, char * const argv[])
@@ -87,7 +89,13 @@ int main (int argc, char * const argv[])
         else if(strcmp(argv[i],"-p")==0 or strcmp(argv[i],"--install-path")==0)
         {
             i++;
-            Settings::inside_lib_path(argv[i]);
+            Settings::inside_bin_load_path(argv[i]);
+            continue;
+        }
+        else if(strcmp(argv[i],"-lp")==0 or strcmp(argv[i],"--install-libs-path")==0)
+        {
+            i++;
+            Settings::inside_lib_load_path(argv[i]);
             continue;
         }
         else if(strcmp(argv[i],"-i")==0 or strcmp(argv[i],"--ignore")==0)
@@ -100,6 +108,11 @@ int main (int argc, char * const argv[])
         {
             i++;
             Settings::destFolder(argv[i]);
+            continue;
+        }
+        else if(strcmp(argv[i],"-ie")==0 or strcmp(argv[i],"--ignore-existing")==0)
+        {
+            Settings::canIgnoreExisting(true);
             continue;
         }
         else if(strcmp(argv[i],"-of")==0 or strcmp(argv[i],"--overwrite-files")==0)
@@ -142,6 +155,11 @@ int main (int argc, char * const argv[])
             showHelp();
             exit(1);
         }
+    }
+
+    if (Settings::inside_lib_load_path() == "") {
+        // Default 'libs' load path to be equal to 'bin' load path for backward compatibility with older dylibbundler versions logic
+        Settings::inside_lib_load_path(Settings::inside_bin_load_path());
     }
     
     if(not Settings::bundleLibs() and Settings::fileToFixAmount()<1)
