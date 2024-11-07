@@ -56,8 +56,8 @@ void bundleLibs(bool on);
 bool skipPatching();
 void skipPatching(bool on);
 
-bool ignoreMissing();
-void ignoreMissing(bool on);
+bool skipMissing();
+void skipMissing(bool on);
 
 std::string destFolder();
 void destFolder(const std::string& path);

@@ -252,7 +252,7 @@ void collectDependencies(const std::string& filename, std::vector<std::string>& 
     if(output.find("can't open file")!=std::string::npos or output.find("No such file")!=std::string::npos or output.size()<1)
     {
         std::cerr << "Cannot find file " << filename << " to read its dependencies" << std::endl;
-        if (Settings::ignoreMissing()) {
+        if (Settings::skipMissing()) {
             return;
         }
 

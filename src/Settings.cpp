@@ -55,9 +55,9 @@ bool skipPatching_bool = false;
 bool skipPatching(){ return skipPatching_bool && bundleLibs_bool; }
 void skipPatching(bool on){ skipPatching_bool = on; }
 
-bool ignoreMissing_bool = false;
-bool ignoreMissing(){ return ignoreMissing_bool; }
-void ignoreMissing(bool on){ ignoreMissing_bool = on; }
+bool skipMissing_bool = false;
+bool skipMissing(){ return skipMissing_bool; }
+void skipMissing(bool on){ skipMissing_bool = on; }
 
 std::string dest_folder_str = "./libs/";
 std::string destFolder(){ return dest_folder_str; }

@@ -94,7 +94,7 @@ int main (int argc, char * const argv[])
         }
         else if(strcmp(argv[i],"-sm")==0 or strcmp(argv[i],"--skip-missing")==0)
         {
-            Settings::ignoreMissing(true);
+            Settings::skipMissing(true);
             continue;
         }
         else if(strcmp(argv[i],"-p")==0 or strcmp(argv[i],"--install-path")==0)
