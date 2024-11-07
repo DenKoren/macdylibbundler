@@ -252,6 +252,10 @@ void collectDependencies(const std::string& filename, std::vector<std::string>& 
     if(output.find("can't open file")!=std::string::npos or output.find("No such file")!=std::string::npos or output.size()<1)
     {
         std::cerr << "Cannot find file " << filename << " to read its dependencies" << std::endl;
+        if (Settings::ignoreMissing()) {
+            return;
+        }
+
         exit(1);
     }
     
@@ -395,7 +399,7 @@ void doneWithDeps_go()
         {
             std::cout << "\n* Processing dependency " << deps[n].getInstallPath() << std::endl;
             const bool should_patch = deps[n].copyYourself();
-            if (!should_patch) {
+            if (!should_patch || Settings::skipPatching()) {
                 continue;
             }
             changeLibPathsOnFile(deps[n].getInstallPath(), Settings::inside_dep_load_path());
@@ -409,6 +413,10 @@ void doneWithDeps_go()
     {
         std::cout << "\n* Processing " << Settings::fileToFix(n) << std::endl;
         copyFile(Settings::fileToFix(n), Settings::fileToFix(n)); // to set write permission
+
+        if (Settings::skipPatching()) {
+            continue;
+        }
         changeLibPathsOnFile(Settings::fileToFix(n), Settings::inside_bin_load_path());
         fixRpathsOnFile(Settings::fileToFix(n), Settings::fileToFix(n), Settings::inside_bin_load_path());
         adhocCodeSign(Settings::fileToFix(n));

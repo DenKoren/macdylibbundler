@@ -53,6 +53,12 @@ void canCodesign(bool permission);
 bool bundleLibs();
 void bundleLibs(bool on);
 
+bool skipPatching();
+void skipPatching(bool on);
+
+bool ignoreMissing();
+void ignoreMissing(bool on);
+
 std::string destFolder();
 void destFolder(const std::string& path);
 

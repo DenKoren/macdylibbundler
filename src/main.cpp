@@ -56,6 +56,8 @@ void showHelp()
     
     std::cout << " -x, --fix-file <file to fix (executable or app plug-in)>" << std::endl;
     std::cout << " -b, --bundle-deps" << std::endl;
+    std::cout << "-sp, --skip-patching (do not change load paths in binaries, just collect all dependencies. Has effect only when --bundle-deps is set)" << std::endl;
+    std::cout << "-im, --ignore-missing (just skip missing dependencies and collect what is possible)" << std::endl;
     std::cout << " -d, --dest-dir <directory to send bundled libraries (relative to cwd)>" << std::endl;
     std::cout << " -p, --install-path <'inner' path of bundled libraries when patching files from --fix-file (usually relative to executable, by default '@executable_path/../libs/')>" << std::endl;
     std::cout << "-dp, --install-deps-path <'inner' path of bundled libraries to set when patching dependencies ('@loader_path/' can be an option, defaults to '--install-path' value)>" << std::endl;
@@ -84,6 +86,16 @@ int main (int argc, char * const argv[])
         {
             Settings::bundleLibs(true);
             continue;    
+        }
+        else if(strcmp(argv[i],"-sp")==0 or strcmp(argv[i],"--skip-patching")==0)
+        {
+            Settings::skipPatching(true);
+            continue;
+        }
+        else if(strcmp(argv[i],"-im")==0 or strcmp(argv[i],"--ignore-missing")==0)
+        {
+            Settings::ignoreMissing(true);
+            continue;
         }
         else if(strcmp(argv[i],"-p")==0 or strcmp(argv[i],"--install-path")==0)
         {
