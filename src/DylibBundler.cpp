@@ -398,10 +398,15 @@ void doneWithDeps_go()
         for(int n=dep_amount-1; n>=0; n--)
         {
             std::cout << "\n* Processing dependency " << deps[n].getInstallPath() << std::endl;
-            const bool should_patch = deps[n].copyYourself();
-            if (!should_patch || Settings::skipPatching()) {
+            const bool was_copied = deps[n].copyYourself();
+            if (!was_copied) {
                 continue;
             }
+
+            if (Settings::skipPatching()) {
+                continue;
+            }
+
             changeLibPathsOnFile(deps[n].getInstallPath(), Settings::inside_dep_load_path());
             fixRpathsOnFile(deps[n].getOriginalPath(), deps[n].getInstallPath(), Settings::inside_dep_load_path());
             adhocCodeSign(deps[n].getInstallPath());
@@ -417,6 +422,7 @@ void doneWithDeps_go()
         if (Settings::skipPatching()) {
             continue;
         }
+
         changeLibPathsOnFile(Settings::fileToFix(n), Settings::inside_bin_load_path());
         fixRpathsOnFile(Settings::fileToFix(n), Settings::fileToFix(n), Settings::inside_bin_load_path());
         adhocCodeSign(Settings::fileToFix(n));

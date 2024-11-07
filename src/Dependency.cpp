@@ -196,10 +196,10 @@ bool Dependency::mergeIfSameAs(Dependency& dep2)
 
 bool Dependency::copyYourself()
 {
-    const bool should_patch = copyFile(getOriginalPath(), getInstallPath());
+    const bool was_copied = copyFile(getOriginalPath(), getInstallPath());
     
-    if (!should_patch) {
-        return false;
+    if (!was_copied || Settings::skipPatching()) {
+        return was_copied;
     }
 
     // Fix the lib's inner name
