@@ -96,7 +96,7 @@ bool fileExists(const std::string& filename)
 bool copyFile(const string& from, const string& to)
 {
     bool override = Settings::canOverwriteFiles();
-    bool ignore = Settings::canIgnoreExisting();
+    bool ignore = Settings::skipExisting();
     if( from != to && !override )
     {
         if(fileExists( to ))

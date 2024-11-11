@@ -58,12 +58,12 @@ void showHelp()
     std::cout << " -b, --bundle-deps" << std::endl;
     std::cout << "-sp, --skip-patching (do not change load paths in binaries, just collect all dependencies. Has effect only when --bundle-deps is set)" << std::endl;
     std::cout << "-sm, --skip-missing (just skip missing dependencies and collect what is possible)" << std::endl;
+    std::cout << "-se, --skip-existing (makes bundler to leave existing files in output directory intact)" << std::endl;
     std::cout << " -d, --dest-dir <directory to send bundled libraries (relative to cwd)>" << std::endl;
     std::cout << " -p, --install-path <'inner' path of bundled libraries when patching files from --fix-file (usually relative to executable, by default '@executable_path/../libs/')>" << std::endl;
     std::cout << "-dp, --install-deps-path <'inner' path of bundled libraries to set when patching dependencies ('@loader_path/' can be an option, defaults to '--install-path' value)>" << std::endl;
     std::cout << " -s, --search-path <directory to add to list of locations searched>" << std::endl;
     std::cout << "-of, --overwrite-files (allow overwriting files in output directory)" << std::endl;
-    std::cout << "-ie, --ignore-existing (makes bundler to leave existing files in output directory intact)" << std::endl;
     std::cout << "-od, --overwrite-dir (totally overwrite output directory if it already exists. implies --create-dir)" << std::endl;
     std::cout << "-cd, --create-dir (creates output directory if necessary)" << std::endl;
     std::cout << "-ns, --no-codesign (disables ad-hoc codesigning)" << std::endl;
@@ -97,6 +97,11 @@ int main (int argc, char * const argv[])
             Settings::skipMissing(true);
             continue;
         }
+        else if(strcmp(argv[i],"-se")==0 or strcmp(argv[i],"--skip-existing")==0)
+        {
+            Settings::skipExisting(true);
+            continue;
+        }
         else if(strcmp(argv[i],"-p")==0 or strcmp(argv[i],"--install-path")==0)
         {
             i++;
@@ -119,11 +124,6 @@ int main (int argc, char * const argv[])
         {
             i++;
             Settings::destFolder(argv[i]);
-            continue;
-        }
-        else if(strcmp(argv[i],"-ie")==0 or strcmp(argv[i],"--ignore-existing")==0)
-        {
-            Settings::canIgnoreExisting(true);
             continue;
         }
         else if(strcmp(argv[i],"-of")==0 or strcmp(argv[i],"--overwrite-files")==0)

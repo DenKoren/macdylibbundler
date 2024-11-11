@@ -29,18 +29,18 @@ namespace Settings
 {
 
 bool overwrite_files = false;
-bool ignore_existing = true;
+bool skip_existing = true;
 bool overwrite_dir = false;
 bool create_dir = false;
 bool codesign = true;
 
-bool canIgnoreExisting(){ return ignore_existing; }
+bool skipExisting(){ return skip_existing; }
 bool canOverwriteFiles(){ return overwrite_files; }
 bool canOverwriteDir(){ return overwrite_dir; }
 bool canCreateDir(){ return create_dir; }
 bool canCodesign(){ return codesign; }
 
-void canIgnoreExisting(bool permission){ ignore_existing = permission; }
+void skipExisting(bool permission){ skip_existing = permission; }
 void canOverwriteFiles(bool permission){ overwrite_files = permission; }
 void canOverwriteDir(bool permission){ overwrite_dir = permission; }
 void canCreateDir(bool permission){ create_dir = permission; }

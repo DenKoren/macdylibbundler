@@ -38,8 +38,8 @@ void ignore_prefix(std::string prefix);
 bool canOverwriteFiles();
 void canOverwriteFiles(bool permission);
 
-bool canIgnoreExisting();
-void canIgnoreExisting(bool permission);
+bool skipExisting();
+void skipExisting(bool permission);
 
 bool canOverwriteDir();
 void canOverwriteDir(bool permission);
