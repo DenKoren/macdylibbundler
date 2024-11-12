@@ -29,7 +29,7 @@ namespace Settings
 {
 
 bool overwrite_files = false;
-bool skip_existing = true;
+bool skip_existing = false;
 bool overwrite_dir = false;
 bool create_dir = false;
 bool codesign = true;
